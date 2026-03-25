@@ -1,0 +1,35 @@
+{
+  "cli_version": "0.4.4",
+  "checkpoint_id": "3684d8febba1",
+  "session_id": "unknown",
+  "strategy": "manual-commit",
+  "created_at": "2026-03-25T07:29:05.865771Z",
+  "branch": "cloudflare-containers",
+  "checkpoints_count": 4,
+  "files_touched": [
+    ".claude/settings.local.json",
+    ".env.vercel-secrets",
+    "Dockerfile.cloudflare",
+    "cloudflare/README.md",
+    "cloudflare/worker.js",
+    "wrangler.jsonc"
+  ],
+  "agent": "Claude Code",
+  "token_usage": {
+    "input_tokens": 0,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 0,
+    "api_call_count": 0
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-03-25T07:29:05.809963Z",
+    "agent_lines": 0,
+    "human_added": 1770,
+    "human_modified": 322,
+    "human_removed": 0,
+    "total_committed": 1970,
+    "agent_percentage": 0
+  },
+  "transcript_path": ".cursor/projects/Users-fka-Code-awesome-chatgpt-prompts/agent-transcripts/649bc540-e2a3-4f56-b40f-744bd37835b3/649bc540-e2a3-4f56-b40f-744bd37835b3.jsonl"
+}

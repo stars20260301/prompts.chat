@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.4.4",
+  "checkpoint_id": "3684d8febba1",
+  "strategy": "manual-commit",
+  "branch": "cloudflare-containers",
+  "checkpoints_count": 4,
+  "files_touched": [
+    ".claude/settings.local.json",
+    ".env.vercel-secrets",
+    "Dockerfile.cloudflare",
+    "cloudflare/README.md",
+    "cloudflare/worker.js",
+    "wrangler.jsonc"
+  ],
+  "sessions": [
+    {
+      "metadata": "/36/84d8febba1/0/metadata.json",
+      "transcript": "/36/84d8febba1/0/full.jsonl",
+      "context": "",
+      "content_hash": "/36/84d8febba1/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 0,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 0,
+    "api_call_count": 0
+  }
+}
