@@ -27,6 +27,11 @@ dist
 # Docker
 docker-compose*.yml
 Dockerfile*
+docker/
+
+# Cloudflare
+cloudflare/
+wrangler.jsonc
 
 # Development files
 .github

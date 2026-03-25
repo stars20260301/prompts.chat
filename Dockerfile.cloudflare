@@ -1,0 +1,68 @@
+# Production Dockerfile for Cloudflare Containers
+# Multi-stage build producing a lean standalone Next.js image
+
+# ---------------------------------------------------------------------------
+# Stage 1: Install dependencies
+# ---------------------------------------------------------------------------
+FROM node:24-alpine AS deps
+RUN apk add --no-cache libc6-compat openssl
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+COPY prisma ./prisma/
+
+RUN npm ci
+
+# ---------------------------------------------------------------------------
+# Stage 2: Build the application
+# ---------------------------------------------------------------------------
+FROM node:24-alpine AS builder
+RUN apk add --no-cache libc6-compat openssl
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+# Dummy URL for prisma generate (only needs schema, not a real connection)
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+# Skip Sentry source map upload during container build
+ENV SENTRY_AUTH_TOKEN=""
+
+RUN npx prisma generate
+# Use webpack instead of Turbopack to stay within Docker memory limits
+RUN npx next build --webpack
+
+# ---------------------------------------------------------------------------
+# Stage 3: Production runner
+# ---------------------------------------------------------------------------
+FROM node:24-alpine AS runner
+RUN apk add --no-cache libc6-compat openssl
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
+
+# YAML prompt files read at runtime via readFileSync(process.cwd() + path)
+COPY --from=builder /app/src/lib/ai/*.prompt.yml ./src/lib/ai/
+COPY --from=builder /app/src/app/api/prompt-builder/chat/*.prompt.yml ./src/app/api/prompt-builder/chat/
+
+# Next.js standalone output includes a minimal server and all dependencies
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+CMD ["node", "server.js"]

@@ -55,7 +55,7 @@ const nextConfig: NextConfig = {
         destination: "/embed",
         permanent: true,
       },
-      // Redirect book PDF downloads to GitHub raw to save Vercel edge bandwidth
+      // Redirect book PDF downloads to GitHub raw to save bandwidth
       {
         source: "/book-pdf/:filename",
         destination: "https://raw.githubusercontent.com/f/prompts.chat/refs/heads/main/public/book-pdf/:filename",
@@ -88,15 +88,8 @@ export default withSentryConfig(withMDX(withNextIntl(nextConfig)), {
   // See: https://github.com/f/prompts.chat/issues/1085
 
   webpack: {
-    // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
-    // See the following for more information:
-    // https://docs.sentry.io/product/crons/
-    // https://vercel.com/docs/cron-jobs
-    automaticVercelMonitors: true,
-
     // Tree-shaking options for reducing bundle size
     treeshake: {
-      // Automatically tree-shake Sentry logger statements to reduce bundle size
       removeDebugLogging: true,
     },
   },

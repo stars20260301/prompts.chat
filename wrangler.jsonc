@@ -1,0 +1,59 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "prompts-chat",
+  "main": "cloudflare/worker.js",
+  "compatibility_date": "2026-03-22",
+  "compatibility_flags": ["nodejs_compat"],
+
+  "hyperdrive": [
+    {
+      "binding": "HYPERDRIVE",
+      "id": "2c6ef99cbde84baaac5edacc418eee72"
+    }
+  ],
+
+  "vars": {
+    "NEXTAUTH_URL": "https://prompts.chat",
+    "OPENAI_BASE_URL": "https://api.openai.com/v1",
+    "OPENAI_EMBEDDING_MODEL": "text-embedding-3-large",
+    "OPENAI_GENERATIVE_MODEL": "gpt-4o",
+    "GOOGLE_ANALYTICS_ID": "G-MSNHFWTE77",
+    "ENABLED_STORAGE": "do-spaces",
+    "DO_SPACES_BUCKET": "prompts-chat-space",
+    "DO_SPACES_REGION": "fra1",
+    "FAL_IMAGE_MODELS": "fal-ai/flux-pro/v1.1-ultra,fal-ai/nano-banana-pro",
+    "FAL_VIDEO_MODELS": "fal-ai/veo3.1/fast",
+    "FAL_AUDIO_MODELS": "sonauto/v2/text-to-music,cassetteai/music-generator",
+    "WIRO_IMAGE_MODELS": "google/nano-banana-pro,google/nano-banana",
+    "WIRO_VIDEO_MODELS": "google/veo3.1-fast",
+    "EZOIC_SITE_DOMAIN": "prompts.chat",
+    "NEXT_PUBLIC_EZOIC_ENABLED": "true",
+    "GOOGLE_ADSENSE_ACCOUNT": "ca-pub-6945602608405209"
+  },
+
+  "containers": [
+    {
+      "class_name": "PromptsChatContainer",
+      "image": "./Dockerfile.cloudflare",
+      "max_instances": 3,
+      // standard-1: 2 vCPU, 2 GiB memory
+      "instance_type": "standard-1"
+    }
+  ],
+
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "PROMPTS_CHAT",
+        "class_name": "PromptsChatContainer"
+      }
+    ]
+  },
+
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["PromptsChatContainer"]
+    }
+  ]
+}
